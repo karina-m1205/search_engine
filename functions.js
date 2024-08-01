@@ -1,23 +1,10 @@
 function mySplit(str) {
-    if (typeof str !== "string") {
+    if (typeof str != "string" || !str.trim()) {
         return [];
     }
-    if (str.trim() === "") {
-        return [];
-    }
-    let arr = str.trim().split(" ");
-    return arr;
-}
-function myRun(str) {
-    if (typeof str !== "string") {
-        return [];
-    }
-    if (str.trim() === "") {
-        return [];
-    }
-    let arr = str.trim().split(" ");
-    return arr;
+    const regExp = /[^\w\s]|_/g;
+    const result = str.replaceAll(regExp, " ").trim().split(" ");
+    return result;
 }
 
 module.exports.mySplit = mySplit;
-module.exports.myRun = myRun;
