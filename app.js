@@ -4,10 +4,14 @@ const app = express();
 const DEFAULT_PORT = 3000;
 const PORT = process.env.PORT || DEFAULT_PORT;
 const { mySplit } = require("./functions.js");
-app.use(express.json());
+const multer = require("multer");
+const upload = multer({ dest: "public/uploads" });
+const fs = require("fs");
 const URI = process.env.URI;
 const { MongoClient } = require("mongodb");
 const client = new MongoClient(URI);
+app.use(express.json());
+app.use(express.static("public"));
 
 
 app.get("/search", async (req, res) => {
