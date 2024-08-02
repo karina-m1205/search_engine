@@ -36,8 +36,28 @@ app.post("/crawl", async (req, res) => {
         return res.status(400).send("field required");
     }
     try {
-        let collecton = await connectDb("engine", "pages");
-        const result = await collecton.insertOne({ title, terms: mySplit(content) });
+        let collection = await connectDb("engine", "pages");
+
+        const result = await collection.insertOne({ title, terms: mySplit(content) });
+
+        return res.status(200).json({ addedData: { title, terms: mySplit(content) }, message: result });
+    } catch (err) {
+
+        return res.status(400).json({ message: err.message });
+    } finally {
+        await client.close();
+    }
+});
+
+app.post("/upload",upload.single("textfile"), async (req, res) => {
+    const title = req.file.path;
+    const content = fs.readFileSync(req.file.path,"utf-8");
+    if (!title || !content) {
+        return res.status(400).send("field required");
+    }
+    try {
+        let collection = await connectDb("engine", "pages");
+        const result = await collection.insertOne({ title, terms: mySplit(content) });
         return res.status(200).json({ addedData: { title, terms: mySplit(content) }, message: result });
     } catch (err) {
         return res.status(400).json({ message: err.message });
