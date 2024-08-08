@@ -16,12 +16,13 @@ app.use(express.static("public"));
 
 app.get("/search", async (req, res) => {
     const searchData = req.query.q;
+    const regExp = new RegExp(`^${searchData}`, "i");
     if (!searchData) {
         res.status(400).send("no data to search");
     }
     try {
         const collection = await connectDb("engine", "pages");
-        const result = await collection.find({ terms: searchData }).toArray();
+        const result = await collection.find({ terms: regExp }).toArray();
         return res.status(200).json({ findData: result });
     } catch (err) {
         return res.status(400).json({ message: err.message });
